@@ -5,17 +5,37 @@ import ColoredButtons from './ColoredButtons'
 
 
 function ColoredCircles(props) {
-    let [colors, setColors] = useState(["Violet", "Indigo", "Gold", "Cyan", "Sienna", "Mistyrose", "Royalblue", "Sandybrown"]);
+    let [circles, setCircles] = useState([]);
+
+    const getRandom = (min = 0, max = 100) => {
+        return Math.random() * max - min
+    }
 
     const makeCircle = (color) => {
-        setColors(() => [...colors, color])
+        setCircles(() => [...circles, {color, x:getRandom(), y:getRandom()}])
+    }
+    const changePosition = (idx) => {
+        // setCircles(() => {
+        //     let copy = [...circles]
+        //     copy[idx].x = getRandom()
+        //     copy[idx].y = getRandom()
+        //     return copy
+        // })
+        // better way of doing this 👆🏾
+
+        setCircles(circles => (
+            circles.map((c, i) => (
+                i === idx ?
+                { ...c, x: getRandom(), y: getRandom() }
+                :c
+            ))
+        ))
     }
 
 
   return (
       <>
-          <ColoredButtons options = {['Darkgreen','teal','navy','pink', "Orange", "Sienna"]} handle={makeCircle}/>
-          <ColoredButtons options = {[ "Mistyrose", "Royalblue", "Sandybrown"]} handle={makeCircle}/>
+          <ColoredButtons options = {['Darkgreen','teal','navy','pink', "Orange"]} handle={makeCircle}/>
           <ColoredButtons options = {["Violet", "Indigo", "Gold", "Cyan" ]} handle={makeCircle}/>
           <ColoredButtons options = {["Sienna", "Mistyrose", "Royalblue", "Sandybrown" ]} handle={makeCircle}/>
 
@@ -23,7 +43,13 @@ function ColoredCircles(props) {
 
           <div>
 
-              {colors.map((c, i) => <Circle key={i} color={c} idx={i} />)}
+              {circles.map(({ color, x, y }, i) => <Circle
+                  key={i}
+                  color={color}
+                  x={x}
+                  y={y}
+                  idx={i}
+                  handle={changePosition} />)}
           </div>
 
 
